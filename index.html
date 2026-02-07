@@ -33,9 +33,15 @@
         .premium-btn:active { background: var(--gold); color: #000; }
 
         .flashcard {
-            flex-grow: 1; margin: 5px 0;
+            /* flex-grow: 1; margin: 5px 0; */
             background: linear-gradient(145deg, #0a0a0a, #000);
             border: 1.5px solid var(--gold); border-radius: 35px;
+
+            /* flex-grow: 1;  <-- Diese Zeile entfernen oder auskommentieren */
+    margin: 10px auto; /* Zentriert die Karte horizontal */
+    width: 100%;       /* Nutzt die volle Breite des Containers */
+    height: 250px;     /* HIER die feste Höhe setzen (z.B. 250px statt flexibel) */
+            
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; position: relative; padding: 15px;
         }
