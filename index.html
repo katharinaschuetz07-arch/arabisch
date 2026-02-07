@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Arabisch Premium v1.1.7</title>
+    <style>
+        :root { --gold: #D4AF37; --emerald: #064e3b; --dark: #000; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+        body {
+            background: var(--dark);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; font-family: 'Times New Roman', Times, serif;
+            color: var(--gold); overflow: hidden;
+        }
+        .app-container {
+            width: 92vw; max-width: 380px; height: 88vh; max-height: 750px; /* Kürzer für 7.9 Zoll */
+            background: radial-gradient(circle at center, #062c1e 0%, #000 100%);
+            border: 4px solid var(--gold); border-radius: 50px;
+            display: flex; flex-direction: column; padding: 15px;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+        }
+        header { text-align: center; margin-bottom: 5px; }
+        .version-tag { font-size: 0.6rem; opacity: 0.6; letter-spacing: 2px; }
+        h1 { margin: 2px 0; font-size: 1.6rem; letter-spacing: 3px; }
+        .divider { width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 8px auto; }
+
+        .menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+        .premium-btn {
+            background: rgba(255,255,255,0.05); color: var(--gold); border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 10px 2px; font-size: 0.7rem; font-weight: bold; border-radius: 10px; cursor: pointer;
+        }
+        .premium-btn:active { background: var(--gold); color: #000; }
+
+        .flashcard {
+            flex-grow: 1; margin: 5px 0;
+            background: linear-gradient(145deg, #0a0a0a, #000);
+            border: 1.5px solid var(--gold); border-radius: 35px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; position: relative; padding: 15px;
+        }
+        .cat-badge { position: absolute; top: 15px; left: 20px; font-size: 0.55rem; opacity: 0.5; text-transform: uppercase; }
+        #phrase-ar { font-size: 2.4rem; color: #fff; margin-bottom: 10px; font-weight: bold; }
+        #phrase-ph { font-size: 0.9rem; opacity: 0.8; font-style: italic; color: var(--gold); }
+        #phrase-de { font-size: 1.1rem; color: #fff; opacity: 0.7; margin-top: 5px; }
+
+        .counter-box { position: absolute; bottom: 15px; right: 20px; font-size: 0.65rem; font-weight: bold; opacity: 0.5; }
+
+        .controls { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 10px; margin-top: 10px; }
+        .nav-btn {
+            background: transparent; color: var(--gold); border: 1px solid var(--gold);
+            padding: 10px; border-radius: 18px; font-weight: bold; font-size: 0.7rem;
+        }
+        .nav-btn.play { background: var(--gold); color: #000; }
+
+        .bottom-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .footer-btn {
+            background: var(--gold); color: #000; padding: 10px;
+            border-radius: 20px; text-align: center; font-weight: 900; font-size: 0.75rem;
+        }
+        footer { text-align: center; margin-top: 10px; font-size: 0.65rem; opacity: 0.5; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <div class="version-tag">Premium Edition | V. 1.1.7</div>
+        <h1>ARABISCH</h1>
+        <div class="divider"></div>
+    </header>
+
+    <div class="menu-grid">
+        <button class="premium-btn" onclick="setCat('Alltag')">Alltag</button>
+        <button class="premium-btn" onclick="setCat('Basis')">Basis</button>
+        <button class="premium-btn" onclick="setCat('Reise')">Reise</button>
+        <button class="premium-btn" onclick="setCat('Hotel')">Hotel</button>
+        <button class="premium-btn" onclick="setCat('Gastro')">Gastro</button>
+        <button class="premium-btn" onclick="setCat('Amt')">Amt</button>
+    </div>
+
+    <div class="flashcard" onclick="next()">
+        <div class="cat-badge" id="cat-display">START</div>
+        <div id="phrase-ar">...</div>
+        <div id="phrase-ph">...</div>
+        <div id="phrase-de">...</div>
+        <div class="counter-box" id="counter">1 / 25</div>
+    </div>
+
+    <div class="controls">
+        <button class="nav-btn" onclick="prev()">Zurück</button>
+        <button class="nav-btn play" onclick="speak()">Audio</button>
+        <button class="nav-btn" onclick="next()">Vor</button>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="footer-btn" onclick="setCat('Home')">Home</div>
+        <div class="footer-btn" onclick="setCat('Vokabeln')">Vokabeln</div>
+    </div>
+
+    <footer>(c) 2026 Arabisch Premium App</footer>
+</div>
+
+<script>
+    const data = {
+        Home: [
+            {ar: "أهلاً بك", ph: "[ah-lan bik]", de: "Willkommen"},
+            {ar: "صباح الخير", ph: "[sa-ba-hul khair]", de: "Guten Morgen"},
+            {ar: "مساء الخير", ph: "[ma-sa-ul khair]", de: "Guten Abend"},
+            {ar: "كيف حالك؟", ph: "[kay-fa ha-luk]", de: "Wie geht es dir?"},
+            {ar: "أنا بخير", ph: "[ana bi-khayr]", de: "Mir geht es gut"},
+            {ar: "شكراً", ph: "[shuk-ran]", de: "Danke"},
+            {ar: "عفواً", ph: "[af-wan]", de: "Bitte / Keine Ursache"},
+            {ar: "مع السلامة", ph: "[ma-as-sa-la-ma]", de: "Auf Wiedersehen"},
+            {ar: "تشرفنا", ph: "[ta-shar-raf-na]", de: "Sehr erfreut"},
+            {ar: "إلى اللقاء", ph: "[ila al-li-qa]", de: "Bis bald"}
+        ],
+        Alltag: [
+            {ar: "يا سلام", ph: "[ya sa-lam]", de: "Wow / Klasse"},
+            {ar: "مبروك", ph: "[mab-rook]", de: "Glückwunsch"},
+            {ar: "بالتوفيق", ph: "[bit-taw-feeq]", de: "Viel Erfolg"},
+            {ar: "يا الله", ph: "[ya allah]", de: "O Gott / Los geht's"},
+            {ar: "عيني", ph: "[ay-ni]", de: "Mein Lieber (Auge)"},
+            {ar: "حبيبي", ph: "[ha-bi-bi]", de: "Mein Schatz / Freund"},
+            {ar: "تفضل", ph: "[ta-fad-dal]", de: "Bitte sehr (beim Geben)"},
+            {ar: "لو سمحت", ph: "[law sa-maht]", de: "Wenn ich bitten darf"},
+            {ar: "مش مشكلة", ph: "[mish mush-ki-la]", de: "Kein Problem"},
+            {ar: "ان شاء الله", ph: "[in sha' allah]", de: "Hoffentlich"}
+        ],
+        Basis: [
+            {ar: "نعم", ph: "[na-am]", de: "Ja"},
+            {ar: "لا", ph: "[la]", de: "Nein"},
+            {ar: "من فضلك", ph: "[min fad-lak]", de: "Bitte"},
+            {ar: "ممكن", ph: "[mum-kin]", de: "Vielleicht"},
+            {ar: "أين؟", ph: "[ay-na]", de: "Wo?"},
+            {ar: "متى؟", ph: "[ma-ta]", de: "Wann?"},
+            {ar: "كم؟", ph: "[kam]", de: "Wie viel?"},
+            {ar: "واحد", ph: "[wa-hid]", de: "Eins"},
+            {ar: "اثنان", ph: "[ith-nan]", de: "Zwei"},
+            {ar: "ثلاثة", ph: "[tha-la-tha]", de: "Drei"}
+        ],
+        Reise: [
+            {ar: "مطار", ph: "[ma-tar]", de: "Flughafen"},
+            {ar: "محطة", ph: "[ma-hat-ta]", de: "Bahnhof"},
+            {ar: "تذكرة", ph: "[tadh-ki-ra]", de: "Fahrkarte"},
+            {ar: "جواز سفر", ph: "[ja-waz sa-far]", de: "Reisepass"},
+            {ar: "يمين", ph: "[ya-meen]", de: "Rechts"},
+            {ar: "يسار", ph: "[ya-sar]", de: "Links"},
+            {ar: "إلى الأمام", ph: "[ila al-amaam]", de: "Geradeaus"},
+            {ar: "حقيبة", ph: "[ha-qee-ba]", de: "Koffer"},
+            {ar: "سيارة أجرة", ph: "[say-ya-rat uj-ra]", de: "Taxi"},
+            {ar: "طائرة", ph: "[ta-i-ra]", de: "Flugzeug"}
+        ],
+        Hotel: [
+            {ar: "فندق", ph: "[fun-duq]", de: "Hotel"},
+            {ar: "غرفة", ph: "[ghur-fa]", de: "Zimmer"},
+            {ar: "حجز", ph: "[haj-z]", de: "Reservierung"},
+            {ar: "مفتاح", ph: "[mif-tah]", de: "Schlüssel"},
+            {ar: "الفطور", ph: "[al-fu-toor]", de: "Frühstück"},
+            {ar: "حمام", ph: "[ham-maam]", de: "Badezimmer"},
+            {ar: "دوش", ph: "[dush]", de: "Dusche"},
+            {ar: "سرير", ph: "[sa-reer]", de: "Bett"},
+            {ar: "خروج", ph: "[khu-rooj]", de: "Check-out"},
+            {ar: "منشفة", ph: "[min-sha-fa]", de: "Handtuch"}
+        ],
+        Gastro: [
+            {ar: "مطعم", ph: "[mat-am]", de: "Restaurant"},
+            {ar: "قائمة", ph: "[qa-i-ma]", de: "Speisekarte"},
+            {ar: "الحساب", ph: "[al-hi-sab]", de: "Die Rechnung"},
+            {ar: "ماء", ph: "[ma']", de: "Wasser"},
+            {ar: "قهوة", ph: "[qah-wa]", de: "Kaffee"},
+            {ar: "بدون سكر", ph: "[bi-doon suk-kar]", de: "Ohne Zucker"},
+            {ar: "خبز", ph: "[khub-z]", de: "Brot"},
+            {ar: "لذيذ", ph: "[la-dheedh]", de: "Lecker"},
+            {ar: "ملح", ph: "[milh]", de: "Salz"},
+            {ar: "كأس", ph: "[ka's]", de: "Glas"}
+        ],
+        Amt: [
+            {ar: "شرطة", ph: "[shur-ta]", de: "Polizei"},
+            {ar: "مستشفى", ph: "[mus-tash-fa]", de: "Krankenhaus"},
+            {ar: "طبيب", ph: "[ta-beeb]", de: "Arzt"},
+            {ar: "سفارة", ph: "[sa-fa-ra]", de: "Botschaft"},
+            {ar: "توقيع", ph: "[taw-qee-a]", de: "Unterschrift"},
+            {ar: "ورقة", ph: "[wa-ra-qa]", de: "Papier / Dokument"},
+            {ar: "مساعدة", ph: "[mu-sa-a-da]", de: "Hilfe"},
+            {ar: "طارئ", ph: "[ta-ri']", de: "Notfall"},
+            {ar: "تأشيرة", ph: "[ta-shee-ra]", de: "Visum"},
+            {ar: "مكتب", ph: "[mak-tab]", de: "Büro / Amt"}
+        ],
+        Vokabeln: [
+            {ar: "كتاب", ph: "[ki-tab]", de: "Buch"},
+            {ar: "شمس", ph: "[shams]", de: "Sonne"},
+            {ar: "قمر", ph: "[qa-mar]", de: "Mond"},
+            {ar: "بيت", ph: "[bayt]", de: "Haus"},
+            {ar: "بحر", ph: "[bahr]", de: "Meer"},
+            {ar: "مدينة", ph: "[ma-dee-na]", de: "Stadt"},
+            {ar: "شجرة", ph: "[sha-ja-ra]", de: "Baum"},
+            {ar: "وقت", ph: "[waqt]", de: "Zeit"},
+            {ar: "حب", ph: "[hubb]", de: "Liebe"},
+            {ar: "سلام", ph: "[sa-lam]", de: "Frieden"}
+        ]
+    };
+
+    // Jede Rubrik auf 25 Karten auffüllen
+    Object.keys(data).forEach(cat => {
+        let baseItems = data[cat];
+        while(data[cat].length < 25) {
+            data[cat].push({...baseItems[data[cat].length % baseItems.length]});
+        }
+    });
+
+    let current = 'Home';
+    let idx = 0;
+
+    function setCat(c) {
+        if(!data[c]) return;
+        current = c; idx = 0; update();
+    }
+
+    function update() {
+        const item = data[current][idx];
+        document.getElementById('cat-display').innerText = current;
+        document.getElementById('phrase-ar').innerText = item.ar;
+        document.getElementById('phrase-ph').innerText = item.ph;
+        document.getElementById('phrase-de').innerText = item.de;
+        document.getElementById('counter').innerText = `${idx + 1} / 25`;
+        speak();
+    }
+
+    function next() { idx = (idx + 1) % 25; update(); }
+    function prev() { idx = (idx - 1 + 25) % 25; update(); }
+
+    function speak() {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(document.getElementById('phrase-ar').innerText);
+        msg.lang = 'ar-SA';
+        msg.rate = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
+
+    window.onload = update;
+</script>
+
+</body>
+</html>
