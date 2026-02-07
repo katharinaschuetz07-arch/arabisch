@@ -419,19 +419,25 @@
         current = c; idx = 0; update();
     }
 
+    }
+
     function update() {
         const item = data[current][idx];
         document.getElementById('cat-display').innerText = current;
         document.getElementById('phrase-ar').innerText = item.ar;
         document.getElementById('phrase-ph').innerText = item.ph;
         document.getElementById('phrase-de').innerText = item.de;
-        document.getElementById('counter').innerText = `${idx + 1} / 25`;
+        // ÄNDERUNG HIER: Zeigt nun die echte Anzahl der Karten an
+        document.getElementById('counter').innerText = `${idx + 1} / ${data[current].length}`;
         speak();
     }
 
-    function next() { idx = (idx + 1) % 25; update(); }
-    function prev() { idx = (idx - 1 + 25) % 25; update(); }
 
+
+    function next() { idx = (idx + 1) % data[current].length; update(); }
+    function prev() { idx = (idx - 1 + data[current].length) % data[current].length; update(); }
+    
+    
     function speak() {
         window.speechSynthesis.cancel();
         const msg = new SpeechSynthesisUtterance(document.getElementById('phrase-ar').innerText);
